@@ -1,13 +1,13 @@
 package epochs_test
 
 import (
+	simapp "github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	simapp "github.com/ingenuity-build/quicksilver/app"
 	"github.com/ingenuity-build/quicksilver/x/epochs"
 	"github.com/ingenuity-build/quicksilver/x/epochs/types"
 )

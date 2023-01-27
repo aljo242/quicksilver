@@ -3,6 +3,7 @@ package participationrewards_test
 import (
 	"encoding/json"
 	"fmt"
+	simapp "github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
 
@@ -11,7 +12,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	simapp "github.com/ingenuity-build/quicksilver/app"
 	"github.com/ingenuity-build/quicksilver/x/participationrewards"
 	"github.com/ingenuity-build/quicksilver/x/participationrewards/keeper"
 	"github.com/ingenuity-build/quicksilver/x/participationrewards/types"

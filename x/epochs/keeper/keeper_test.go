@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -23,7 +24,7 @@ type KeeperTestSuite struct {
 // Test helpers
 func (suite *KeeperTestSuite) DoSetupTest(t *testing.T) {
 	checkTx := false
-	suite.app = app.Setup(t, checkTx)
+	suite.app = testutil.Setup(t, checkTx)
 
 	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{})
 

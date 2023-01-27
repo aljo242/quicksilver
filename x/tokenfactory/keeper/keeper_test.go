@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
 
@@ -39,7 +40,7 @@ type KeeperTestSuite struct {
 // Setup sets up basic environment for suite (App, Ctx, and test accounts)
 func (s *KeeperTestSuite) Setup() {
 	cmdcfg.SetBech32Prefixes(sdk.GetConfig())
-	s.App = app.Setup(s.T(), false)
+	s.App = testutil.Setup(s.T(), false)
 	s.Ctx = s.App.BaseApp.NewContext(false, tmtypes.Header{Height: 1, ChainID: "quick-1", Time: time.Now().UTC()})
 	s.QueryHelper = &baseapp.QueryServiceTestHelper{
 		GRPCQueryRouter: s.App.GRPCQueryRouter(),
@@ -70,7 +71,7 @@ func (s *KeeperTestSuite) FundAcc(acc sdk.AccAddress, amounts sdk.Coins) {
 
 func (s *KeeperTestSuite) SetupTestForInitGenesis() {
 	// Setting to True, leads to init genesis not running
-	s.App = app.Setup(s.T(), true)
+	s.App = testutil.Setup(s.T(), true)
 	s.Ctx = s.App.BaseApp.NewContext(true, tmtypes.Header{})
 }
 

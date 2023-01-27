@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -15,7 +16,7 @@ import (
 )
 
 // NewDefaultGenesisState generates the default state for the application.
-func NewDefaultGenesisState() GenesisState {
+func NewDefaultGenesisState() testutil.GenesisState {
 	encCfg := MakeEncodingConfig()
 	gen := ModuleBasics.DefaultGenesis(encCfg.Marshaler)
 

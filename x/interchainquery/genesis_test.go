@@ -1,6 +1,7 @@
 package interchainquery_test
 
 import (
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -15,7 +16,7 @@ import (
 )
 
 func init() {
-	ibctesting.DefaultTestingAppInit = app.SetupTestingApp
+	ibctesting.DefaultTestingAppInit = testutil.SetupTestingApp
 }
 
 func TestInterChainQueryTestSuite(t *testing.T) {

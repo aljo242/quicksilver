@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/zlib"
 	"encoding/json"
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
 
@@ -18,7 +19,7 @@ import (
 )
 
 func init() {
-	ibctesting.DefaultTestingAppInit = app.SetupTestingApp
+	ibctesting.DefaultTestingAppInit = testutil.SetupTestingApp
 }
 
 // TestKeeperTestSuite runs all the tests within this package.

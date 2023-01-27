@@ -3,6 +3,7 @@ package wasmbinding_test
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
 
@@ -31,7 +32,7 @@ type StargateTestSuite struct {
 }
 
 func (suite *StargateTestSuite) SetupTest() {
-	suite.app = app.Setup(suite.T(), false)
+	suite.app = testutil.Setup(suite.T(), false)
 	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "quicksilver-1", Time: time.Now().UTC()})
 }
 

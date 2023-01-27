@@ -1,6 +1,7 @@
 package wasmbinding
 
 import (
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
 
@@ -14,7 +15,7 @@ import (
 )
 
 func CreateTestInput(t *testing.T) (*app.Quicksilver, sdk.Context) {
-	quicksilverApp := app.Setup(t, false)
+	quicksilverApp := testutil.Setup(t, false)
 	ctx := quicksilverApp.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "quicksilver-1", Time: time.Now().UTC()})
 	return quicksilverApp, ctx
 }

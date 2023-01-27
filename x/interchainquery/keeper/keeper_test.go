@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -17,7 +18,7 @@ import (
 const TestOwnerAddress = "cosmos17dtl0mjt3t77kpuhg2edqzjpszulwhgzuj9ljs"
 
 func init() {
-	ibctesting.DefaultTestingAppInit = app.SetupTestingApp
+	ibctesting.DefaultTestingAppInit = testutil.SetupTestingApp
 }
 
 func TestKeeperTestSuite(t *testing.T) {

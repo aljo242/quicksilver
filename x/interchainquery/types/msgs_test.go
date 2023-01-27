@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -25,7 +26,7 @@ var (
 )
 
 func init() {
-	ibctesting.DefaultTestingAppInit = app.SetupTestingApp
+	ibctesting.DefaultTestingAppInit = testutil.SetupTestingApp
 }
 
 func GetSimApp(chain *ibctesting.TestChain) *app.Quicksilver {

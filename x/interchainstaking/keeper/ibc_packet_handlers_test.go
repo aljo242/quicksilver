@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
 
@@ -9,7 +10,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
-	"github.com/ingenuity-build/quicksilver/app"
 	"github.com/ingenuity-build/quicksilver/utils"
 	icskeeper "github.com/ingenuity-build/quicksilver/x/interchainstaking/keeper"
 	icstypes "github.com/ingenuity-build/quicksilver/x/interchainstaking/types"
@@ -17,7 +17,7 @@ import (
 )
 
 func TestHandleMsgTransferGood(t *testing.T) {
-	app, ctx := app.GetAppWithContext(t, true)
+	app, ctx := testutil.GetAppWithContext(t, true)
 	app.BankKeeper.MintCoins(ctx, icstypes.ModuleName, sdk.NewCoins(sdk.NewCoin("denom", sdk.NewInt(100))))
 
 	sender := utils.GenerateAccAddressForTest()
@@ -47,7 +47,7 @@ func TestHandleMsgTransferGood(t *testing.T) {
 }
 
 func TestHandleMsgTransferBadType(t *testing.T) {
-	app, ctx := app.GetAppWithContext(t, true)
+	app, ctx := testutil.GetAppWithContext(t, true)
 	app.BankKeeper.MintCoins(ctx, ibctransfertypes.ModuleName, sdk.NewCoins(sdk.NewCoin("denom", sdk.NewInt(100))))
 
 	transferMsg := banktypes.MsgSend{}
@@ -56,7 +56,7 @@ func TestHandleMsgTransferBadType(t *testing.T) {
 
 func TestHandleMsgTransferBadRecipient(t *testing.T) {
 	recipient := utils.GenerateAccAddressForTest()
-	app, ctx := app.GetAppWithContext(t, true)
+	app, ctx := testutil.GetAppWithContext(t, true)
 
 	sender := utils.GenerateAccAddressForTest()
 	senderAddr, _ := sdk.Bech32ifyAddressBytes("cosmos", sender)

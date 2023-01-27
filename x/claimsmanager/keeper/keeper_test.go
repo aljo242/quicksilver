@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
 
@@ -15,7 +16,7 @@ import (
 var testAddress = utils.GenerateAccAddressForTest().String()
 
 func init() {
-	ibctesting.DefaultTestingAppInit = app.SetupTestingApp
+	ibctesting.DefaultTestingAppInit = testutil.SetupTestingApp
 }
 
 // TestKeeperTestSuite runs all the tests within this package.

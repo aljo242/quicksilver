@@ -1,9 +1,10 @@
 package keeper_test
 
 import (
-	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
+
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 
 	ibctesting "github.com/cosmos/ibc-go/v5/testing"
 	"github.com/stretchr/testify/suite"

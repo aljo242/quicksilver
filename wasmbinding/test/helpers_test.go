@@ -1,9 +1,10 @@
 package wasmbinding
 
 import (
-	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
+
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 
 	"github.com/ingenuity-build/quicksilver/app"
 

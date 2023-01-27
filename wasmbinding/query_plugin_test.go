@@ -3,9 +3,10 @@ package wasmbinding_test
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
+
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 	"github.com/cosmos/cosmos-sdk/codec"

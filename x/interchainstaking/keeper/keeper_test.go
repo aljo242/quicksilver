@@ -1,9 +1,10 @@
 package keeper_test
 
 import (
-	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
+
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -19,6 +20,7 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	tmclienttypes "github.com/cosmos/ibc-go/v5/modules/light-clients/07-tendermint/types"
+
 	"github.com/ingenuity-build/quicksilver/app"
 	"github.com/ingenuity-build/quicksilver/utils"
 	ics "github.com/ingenuity-build/quicksilver/x/interchainstaking"

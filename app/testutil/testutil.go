@@ -27,8 +27,6 @@ import (
 	"github.com/ingenuity-build/quicksilver/app"
 )
 
-type GenesisState map[string]json.RawMessage
-
 type EmptyAppOptions struct{}
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in
@@ -138,10 +136,10 @@ func SetupTestingApp() (ibctesting.TestingApp, map[string]json.RawMessage) {
 
 // GenesisStateWithValSet modifies a Genesis State to add a validator set
 func GenesisStateWithValSet(t *testing.T,
-	app *app.Quicksilver, genesisState GenesisState,
+	app *app.Quicksilver, genesisState app.GenesisState,
 	valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount,
 	balances ...banktypes.Balance,
-) GenesisState {
+) app.GenesisState {
 	t.Helper()
 	// set genesis accounts
 	authGenesis := authtypes.NewGenesisState(authtypes.DefaultParams(), genAccs)

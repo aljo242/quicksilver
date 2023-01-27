@@ -1,19 +1,21 @@
 package keeper_test
 
 import (
-	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
+
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
+	"github.com/stretchr/testify/require"
+
 	"github.com/ingenuity-build/quicksilver/utils"
 	icskeeper "github.com/ingenuity-build/quicksilver/x/interchainstaking/keeper"
 	icstypes "github.com/ingenuity-build/quicksilver/x/interchainstaking/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestHandleMsgTransferGood(t *testing.T) {

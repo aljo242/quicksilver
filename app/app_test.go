@@ -20,6 +20,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/ingenuity-build/quicksilver/app"
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 )
 
 func TestQuicksilverExport(t *testing.T) {
@@ -58,7 +59,7 @@ func TestQuicksilverExport(t *testing.T) {
 	)
 
 	genesisState := app.NewDefaultGenesisState()
-	genesisState = genesisStateWithValSet(t, a, genesisState, valSet, []authtypes.GenesisAccount{acc}, balance)
+	genesisState = testutil.GenesisStateWithValSet(t, a, genesisState, valSet, []authtypes.GenesisAccount{acc}, balance)
 
 	stateBytes, err := json.MarshalIndent(genesisState, "", "  ")
 	require.NoError(t, err)

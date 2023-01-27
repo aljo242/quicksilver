@@ -3,9 +3,10 @@ package participationrewards_test
 import (
 	"encoding/json"
 	"fmt"
-	simapp "github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
+
+	simapp "github.com/ingenuity-build/quicksilver/app/testutil"
 
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"

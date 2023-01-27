@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"compress/zlib"
 	"encoding/json"
-	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
 	"time"
+
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctesting "github.com/cosmos/ibc-go/v5/testing"

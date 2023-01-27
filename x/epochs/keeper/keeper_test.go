@@ -1,8 +1,9 @@
 package keeper_test
 
 import (
-	"github.com/ingenuity-build/quicksilver/app/testutil"
 	"testing"
+
+	"github.com/ingenuity-build/quicksilver/app/testutil"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"

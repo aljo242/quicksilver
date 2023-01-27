@@ -2,6 +2,8 @@ package app_test
 
 import (
 	"encoding/json"
+	"fmt"
+	"math/rand"
 	"os"
 	"testing"
 
@@ -10,8 +12,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/mock"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	simulationtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
@@ -19,9 +23,13 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/ingenuity-build/quicksilver/app"
+	quicksilverapp "github.com/ingenuity-build/quicksilver/app"
 	"github.com/ingenuity-build/quicksilver/app/testutil"
 )
+
+func init() {
+	simapp.GetSimulatorFlags()
+}
 
 func TestQuicksilverExport(t *testing.T) {
 	privVal := mock.NewPV()
@@ -43,51 +51,124 @@ func TestQuicksilverExport(t *testing.T) {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100000000000000))),
 	}
 	db := dbm.NewMemDB()
-	a := app.NewQuicksilver(
+	app := quicksilverapp.NewQuicksilver(
 		log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
 		db,
 		nil,
 		true,
 		map[int64]bool{},
-		app.DefaultNodeHome,
+		quicksilverapp.DefaultNodeHome,
 		0,
-		app.MakeEncodingConfig(),
+		quicksilverapp.MakeEncodingConfig(),
 		wasm.EnableAllProposals,
 		simapp.EmptyAppOptions{},
-		app.GetWasmOpts(simapp.EmptyAppOptions{}),
+		quicksilverapp.GetWasmOpts(simapp.EmptyAppOptions{}),
 		false,
 	)
 
-	genesisState := app.NewDefaultGenesisState()
-	genesisState = testutil.GenesisStateWithValSet(t, a, genesisState, valSet, []authtypes.GenesisAccount{acc}, balance)
+	genesisState := quicksilverapp.NewDefaultGenesisState()
+	genesisState = testutil.GenesisStateWithValSet(t, app, genesisState, valSet, []authtypes.GenesisAccount{acc}, balance)
 
 	stateBytes, err := json.MarshalIndent(genesisState, "", "  ")
 	require.NoError(t, err)
 
 	// Initialize the chain
-	a.InitChain(
+	app.InitChain(
 		abci.RequestInitChain{
 			ChainId:       "quicksilver-1",
 			Validators:    []abci.ValidatorUpdate{},
 			AppStateBytes: stateBytes,
 		},
 	)
-	a.Commit()
+	app.Commit()
 
 	// Making a new app object with the db, so that initchain hasn't been called
-	a2 := app.NewQuicksilver(log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
+	app2 := quicksilverapp.NewQuicksilver(log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
 		db,
 		nil,
 		true,
 		map[int64]bool{},
-		app.DefaultNodeHome,
+		quicksilverapp.DefaultNodeHome,
 		0,
-		app.MakeEncodingConfig(),
+		quicksilverapp.MakeEncodingConfig(),
 		wasm.EnableAllProposals,
 		simapp.EmptyAppOptions{},
-		app.GetWasmOpts(simapp.EmptyAppOptions{}),
+		quicksilverapp.GetWasmOpts(simapp.EmptyAppOptions{}),
 		false,
 	)
-	_, err = a2.ExportAppStateAndValidators(false, []string{})
+	_, err = app2.ExportAppStateAndValidators(false, []string{})
 	require.NoError(t, err, "ExportAppStateAndValidators should not have an error")
+}
+
+func TestAppStateDeterminism(t *testing.T) {
+	if !simapp.FlagEnabledValue {
+		t.Skip("skipping application simulation")
+	}
+
+	config := simapp.NewConfigFromFlags()
+	config.InitialBlockHeight = 1
+	config.ExportParamsPath = ""
+	config.OnOperation = true
+	config.AllInvariants = true
+	config.NumBlocks = 100
+	config.BlockSize = 200
+	config.Commit = true
+
+	numSeeds := 3
+	numTimesToRunPerSeed := 5
+	appHashList := make([]json.RawMessage, numTimesToRunPerSeed)
+
+	for i := 0; i < numSeeds; i++ {
+		config.Seed = rand.Int63()
+
+		for j := 0; j < numTimesToRunPerSeed; j++ {
+			db := dbm.NewMemDB()
+			app := quicksilverapp.NewQuicksilver(
+				log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
+				db,
+				nil,
+				true,
+				map[int64]bool{},
+				quicksilverapp.DefaultNodeHome,
+				0,
+				quicksilverapp.MakeEncodingConfig(),
+				wasm.EnableAllProposals,
+				simapp.EmptyAppOptions{},
+				quicksilverapp.GetWasmOpts(simapp.EmptyAppOptions{}),
+				false,
+			)
+
+			fmt.Printf(
+				"running non-determinism simulation; seed %d: %d/%d, attempt: %d/%d\n",
+				config.Seed, i+1, numSeeds, j+1, numTimesToRunPerSeed,
+			)
+
+			_, _, err := simulation.SimulateFromSeed(
+				t,
+				os.Stdout,
+				app.GetBaseApp(),
+				testutil.AppStateFn(app.AppCodec(), app.SimulationManager()),
+				simulationtypes.RandomAccounts,
+				simapp.SimulationOperations(app, app.AppCodec(), config),
+				app.ModuleAccountAddrs(),
+				config,
+				app.AppCodec(),
+			)
+			require.NoError(t, err)
+
+			if config.Commit {
+				simapp.PrintStats(db)
+			}
+
+			appHash := app.LastCommitID().Hash
+			appHashList[j] = appHash
+
+			if j != 0 {
+				require.Equal(
+					t, string(appHashList[0]), string(appHashList[j]),
+					"non-determinism in seed %d: %d/%d, attempt: %d/%d\n", config.Seed, i+1, numSeeds, j+1, numTimesToRunPerSeed,
+				)
+			}
+		}
+	}
 }
